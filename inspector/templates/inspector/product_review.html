@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Review</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: rgb(219, 219, 219);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .logo a {
+            color: #000;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .search_box {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .search_box input {
+            padding: 9px;
+            width: 250px;
+            background: rgb(228, 228, 228);
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .search_box i {
+            padding: 10px;
+            cursor: pointer;
+            color: #fff;
+            background: #000;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .side_navbar {
+            padding: 1px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side_navbar a {
+            padding: 0.8rem 2rem;
+            font-weight: 500;
+            font-size: 15px;
+            color: rgb(100, 100, 100);
+        }
+
+        .side_navbar a:hover {
+            background: rgb(235, 235, 235);
+        }
+
+        .side_navbar .active {
+            background: #000;
+            color: #fff;
+        }
+
+        .main-body {
+            width: 100%;
+            padding: 1rem;
+            background-color: #fff;
+            margin: 0 1rem;
+        }
+
+        .upload-form {
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-form h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .upload-form label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .upload-form input[type="text"],
+        .upload-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .upload-form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .upload-form input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .upload-form button[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #000;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <a href="#">FoodGuardian</a>
+    </div>
+    <div class="header-icons">
+        <div class="account">
+            <img src="./pic/img.jpg" alt="">
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="main-body">
+        <div class="upload-form">
+            <h1>Product Review</h1>
+            <button style="background-color: black;
+                border: none;
+                color: white;
+                padding: 8px 12px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 10px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 5px;" onclick="openModal()">View Product Details</button>
+
+            <!-- Modal -->
+            <div id="productModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>{{ product.name }} Details:</h2>
+                    <p>Category: {{ product.category }}</p>
+                    <p>Type: {{ product.product_type }}</p>
+                    <p>Price: {{ product.price }}</p>
+                    <p>Additives: {{ product.food_additives }}</p>
+                    <h3>Initial Approval Status:</h3>
+                    {% if initial_approval_status %}
+                        <p>The product is currently approved.</p>
+                    {% else %}
+                        <p>The product is currently not approved.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form id="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return handleSubmit()">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <label for="approved">Approved</label>
+                <input type="radio" id="approved" name="is_approved" value="approved">
+                <label for="disapproved">Disapproved</label>
+                <input type="radio" id="disapproved" name="is_approved" value="disapproved">
+                <button style="background-color: black;
+                    border: none;
+                    color: white;
+                    padding: 8px 12px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 10px;
+                    margin: 4px 2px;
+                    cursor: pointer;
+                    border-radius: 5px;" type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("productModal");
+
+    // Function to open the modal
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
+    // Function to handle form submission
+    function handleSubmit() {
+        // Add your form submission logic here
+        // For demonstration purposes, I'm showing an alert
+        alert("Form submitted successfully!");
+        return true; // Return true to allow form submission, false to prevent it
+    }
+</script>
+</body>
+</html>
